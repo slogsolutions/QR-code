@@ -1,0 +1,8 @@
+body { padding-bottom: 40px; background: #f7f8fb; }
+
+.card { box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important; }
+.navbar { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.form-control:focus { box-shadow: 0 0 0 .2rem rgba(13,110,253,.25); }
+
+
+

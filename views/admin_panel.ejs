@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/app.css">
+    <style>
+        .qr { width: 128px; height: 128px; }
+        .table td { vertical-align: middle; }
+        .items { white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark mb-4">
+        <div class="container d-flex justify-content-between">
+            <a class="navbar-brand" href="/admin">Admin Panel</a>
+            <form method="post" action="/admin/logout">
+                <button class="btn btn-outline-light btn-sm" type="submit">Logout (<%= user.username %>)</button>
+            </form>
+        </div>
+    </nav>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <div class="container">
+            <div class="navbar-nav">
+                <a class="nav-link <%= currentTable === 'it' ? 'active fw-bold' : '' %>" href="/admin?table=it">IT</a>
+                <a class="nav-link <%= currentTable === 'atg' ? 'active fw-bold' : '' %>" href="/admin?table=atg">ATG</a>
+                <a class="nav-link <%= currentTable === 'lpss' ? 'active fw-bold' : '' %>" href="/admin?table=lpss">LPSS</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="m-0"><%= currentTable.toUpperCase() %> Items</h5>
+            <a href="/form" class="btn btn-sm btn-primary">Add Item</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">S No</th>
+                        <th scope="col">LP No</th>
+                        <th scope="col">Items</th>
+                        <th scope="col">Issue Voucher</th>
+                        <th scope="col">QR</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% items.forEach(function(r){ %>
+                        <tr>
+                            <td><%= r.s_no %></td>
+                            <td><%= r.lp_no %></td>
+                            <td class="items"><%= r.items %></td>
+                            <td><%= r.issue_voucher_number %></td>
+                            <td>
+                                <img class="qr" src="<%= r.qr %>" alt="QR">
+                            </td>
+                            <td class="d-flex gap-2">
+                                <button class="btn btn-sm btn-success" onclick="downloadQRasJpg('<%= r.qrHd %>','<%= r.s_no %>')">Download QR</button>
+                                <button class="btn btn-sm btn-outline-secondary" onclick='navigator.clipboard.writeText(`<%= r.jsonText %>`)'>Copy JSON</button>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        function downloadQRasJpg(dataUrlPng, sNo){
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = function(){
+                const scale = 2; // upscale to improve quality
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width * scale; canvas.height = img.height * scale;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.imageSmoothingEnabled = false;
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                const jpgUrl = canvas.toDataURL('image/jpeg', 0.98);
+                const a = document.createElement('a');
+                a.href = jpgUrl;
+                a.download = 'qr-' + sNo + '.jpg';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+            img.src = dataUrlPng;
+        }
+    </script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+    
+

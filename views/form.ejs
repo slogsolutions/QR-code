@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-semibold" href="/form">QR Inventory</a>
+            <a class="btn btn-outline-light btn-sm" href="/admin/login">Admin</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow border-0 rounded-3">
+                    <div class="card-body">
+                        <h4 class="card-title mb-1">Add Inventory Item</h4>
+                        <p class="text-muted mb-4">Select a table and fill the details, then press Generate QR. The item will be saved automatically and a QR will be shown.</p>
+                        <% if (typeof error !== 'undefined' && error) { %>
+                            <div class="alert alert-danger"><%= error %></div>
+                        <% } %>
+                        <form method="post" action="/form">
+                            <div class="mb-3">
+                                <label class="form-label">Select Table</label>
+                                <select class="form-select" name="table" required>
+                                    <option value="">Choose a table...</option>
+                                    <option value="it">IT</option>
+                                    <option value="atg">ATG</option>
+                                    <option value="lpss">LPSS</option>
+                                    
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">LP No</label>
+                                <input type="text" class="form-control" name="lp_no" placeholder="e.g., 03/08R or IT/10R" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Items</label>
+                                <textarea class="form-control" name="items" rows="3" placeholder="Describe the item" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Issue Voucher Number</label>
+                                <input type="text" class="form-control" name="issue_voucher_number" placeholder="e.g., RV/CRV/IT/001" required>
+                            </div>
+                            <button class="btn btn-primary" type="submit">Generate QR</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
+
+
